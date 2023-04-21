@@ -8,18 +8,18 @@ const {
 } = require("../controllers/users");
 
 // GET /users — возвращает всех пользователей
-router.get("/users", getAllUsers);
+router.get("/", getAllUsers);
 
 // GET /users/:userId - возвращает пользователя по _id
-router.get("/users/:userId", getUser);
+router.get("/:userId", getUser);
 
 // POST /users — создаёт пользователя
-router.post("/users", createUser);
+router.post("/", createUser);
 
 // PATCH /users/me — обновляет профиль
-router.patch("/users/me", updateUserInfo);
+router.patch("/me", updateUserInfo);
 
 // PATCH /users/me/avatar — обновляет аватар
-router.patch("/users/me/avatar", updateUserAvatar);
+router.patch("/me/avatar", updateUserAvatar);
 
 module.exports = router;

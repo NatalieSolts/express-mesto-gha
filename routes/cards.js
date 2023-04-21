@@ -8,18 +8,18 @@ const {
 } = require("../controllers/cards");
 
 // GET /cards — возвращает все карточки
-router.get("/cards", getCards);
+router.get("/", getCards);
 
 // POST /cards — создаёт карточку
-router.post("/cards", createCard);
+router.post("/", createCard);
 
 // DELETE /cards/:cardId — удаляет карточку по идентификатору
-router.delete("/cards/:cardId", deleteCard);
+router.delete("/:cardId", deleteCard);
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
-router.put("/cards/:cardId/likes", likeCard);
+router.put("/:cardId/likes", likeCard);
 
 // DELETE /cards/:cardId/likes — убрать лайк с карточки
-router.delete("/cards/:cardId/likes", dislikeCard);
+router.delete("/:cardId/likes", dislikeCard);
 
 module.exports = router;
