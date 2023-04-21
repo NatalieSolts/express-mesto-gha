@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 // GET /users — возвращает всех пользователей
-module.exports.getUsers = () => {
+module.exports.getAllUsers = () => {
   User.find({});
 };
 
