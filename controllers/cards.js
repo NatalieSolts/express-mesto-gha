@@ -1,8 +1,9 @@
+const mongoose = require("mongoose");
 const Card = require("../models/card");
 const { handleErrors } = require("../errors/errors");
 
 // GET /cards — возвращает все карточки
-module.exports.getCards = () => {
+module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
     .catch((err) => handleErrors(err, res));
@@ -40,7 +41,7 @@ module.exports.likeCard = (req, res) => {
 // DELETE /cards/:cardId/likes — убрать лайк с карточки
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
-    req.params.id,
+    req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true }
   )

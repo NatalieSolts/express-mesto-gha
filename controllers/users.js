@@ -1,8 +1,9 @@
+const mongoose = require("mongoose");
 const User = require("../models/user");
 const { handleErrors } = require("../errors/errors");
 
 // GET /users — возвращает всех пользователей
-module.exports.getAllUsers = () => {
+module.exports.getAllUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
     .catch((err) => handleErrors(err, res));
@@ -10,7 +11,8 @@ module.exports.getAllUsers = () => {
 
 // GET /users/:userId - возвращает пользователя по _id
 module.exports.getUser = (req, res) => {
-  User.findById(req.params.id)
+  User.findById(req.params.userId)
+    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => handleErrors(err, res));
 };
