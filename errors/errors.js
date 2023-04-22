@@ -9,7 +9,7 @@ const NOT_FOUND_ERROR = 404;
 const DEFAULT_ERROR = 500;
 const CREATED_CODE = 201;
 
-module.exports.handleErrors = (err, res) => {
+const handleErrors = (err, res) => {
   if (err instanceof ValidationError) {
     const errorMessage = Object.values(err.errors)
       .map((error) => error.message)
@@ -34,5 +34,7 @@ module.exports.handleErrors = (err, res) => {
 };
 
 module.exports = {
+  NOT_FOUND_ERROR,
   CREATED_CODE,
+  handleErrors,
 };
