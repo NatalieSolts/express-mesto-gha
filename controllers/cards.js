@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Card = require("../models/card");
 const { handleErrors } = require("../errors/errors");
+const { CREATED_CODE } = require("../errors/errors");
 
 // GET /cards — возвращает все карточки
 module.exports.getCards = (req, res) => {
@@ -14,7 +15,7 @@ module.exports.createCard = (req, res) => {
   const id = req.user._id;
   const { name, link } = req.body;
   Card.create({ name, link, owner: id })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(CREATED_CODE).send({ data: card }))
     .catch((err) => handleErrors(err, res));
 };
 

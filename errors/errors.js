@@ -7,6 +7,7 @@ const { ValidationError, DocumentNotFoundError, CastError } =
 const BAD_REQUEST_ERROR = 400;
 const NOT_FOUND_ERROR = 404;
 const DEFAULT_ERROR = 500;
+const CREATED_CODE = 201;
 
 module.exports.handleErrors = (err, res) => {
   if (err instanceof ValidationError) {
@@ -30,4 +31,8 @@ module.exports.handleErrors = (err, res) => {
   return res.status(DEFAULT_ERROR).send({
     message: `Произошла неизвестная ошибка ${err.name}: ${err.message}`,
   });
+};
+
+module.exports = {
+  CREATED_CODE,
 };
