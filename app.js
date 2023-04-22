@@ -1,35 +1,33 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-//const path = require("path");
+const mongoose = require("mongoose");
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const mongoose = require("mongoose");
+// mongoose.connect("mongodb://localhost:27017/mestodb", {
 mongoose
-  .connect("mongodb://localhost:27017/mestodb", {
+  .connect("mongodb://127.0.0.1:27017/mestodb", {
     useNewUrlParser: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
   })
-  .then(() => console.log("connected"))
-  .catch((err) => console.log(`connection error ${err}`));
+  .then(() => console.log("Соединение установлено"))
+  .catch((err) => console.log(`Ошибка ---> ${err}`));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/", require("./routes/users"));
-
-//app.use(express.static(path.join(__dirname, "public")));
+// Реализация временного решения авторизации
 app.use((req, res, next) => {
   req.user = {
-    _id: "5d8b8592978f8bd833ca8133",
+    _id: "6443ce1121f1464b0ce5e2a6",
   };
-
   next();
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/users", require("./routes/users"));
+app.use("/cards", require("./routes/cards"));
+
 app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`App listening on port ${PORT}`);
+  // Если всё работает, консоль покажет, какой порт приложение слушает:
+  console.log(`Сервер слушает порт ---> ${PORT}`);
 });
