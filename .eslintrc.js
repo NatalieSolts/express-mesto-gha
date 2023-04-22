@@ -1,19 +1,6 @@
 export default {
-  env: {
-    browser: true,
-    es2021: true,
-  },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  overrides: [],
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-  },
-  plugins: ["react"],
+  extends: "airbnb-base",
   rules: {
-    extends: "airbnb-base",
-    rules: {
-      "no-underscore-dangle": ["error", { allow: ["_id"] }],
-    },
+    "no-underscore-dangle": ["error", { allow: ["_id"] }],
   },
 };
