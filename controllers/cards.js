@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const Card = require("../models/card");
-const { handleErrors } = require("../errors/errors");
-const { CREATED_CODE } = require("../errors/errors");
+const Card = require('../models/card');
+const { handleErrors } = require('../errors/errors');
+const { CREATED_CODE } = require('../errors/errors');
 
 // GET /cards — возвращает все карточки
 module.exports.getCards = (req, res) => {
@@ -32,7 +31,7 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((card) => res.send({ data: card }))
@@ -44,7 +43,7 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((card) => res.send({ data: card }))

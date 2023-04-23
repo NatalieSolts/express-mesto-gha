@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const User = require("../models/user");
-const { handleErrors } = require("../errors/errors");
+const User = require('../models/user');
+const { handleErrors } = require('../errors/errors');
 
 // GET /users — возвращает всех пользователей
 module.exports.getAllUsers = (req, res) => {
@@ -31,7 +30,7 @@ module.exports.updateUserInfo = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .orFail()
     .then((user) => res.send({ data: user }))
@@ -44,7 +43,7 @@ module.exports.updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .orFail()
     .then((user) => res.send({ data: user }))
