@@ -1,4 +1,8 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const User = require('../models/user');
 const { handleErrors } = require('../errors/errors');
 
@@ -23,8 +27,8 @@ module.exports.createUser = (req, res) => {
     email, password, name, about, avatar,
   } = req.body;
   bcrypt.hash(password, 10)
-    .then((hashedPassword) => User.create({
-      email, hashedPassword, name, about, avatar,
+    .then((hash) => User.create({
+      email, password: hash, name, about, avatar,
     }))
     .then((user) => res.send({ data: user }))
     .catch((err) => handleErrors(err, res));
@@ -53,5 +57,22 @@ module.exports.updateUserAvatar = (req, res) => {
   )
     .orFail()
     .then((user) => res.send({ data: user }))
+    .catch((err) => handleErrors(err, res));
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        { expiresIn: '7d' },
+      );
+      res.cookie('jwt', token, {
+        httpOnly: true,
+      });
+      res.send({ token });
+    })
     .catch((err) => handleErrors(err, res));
 };

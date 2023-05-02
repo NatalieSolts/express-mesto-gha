@@ -1,13 +1,11 @@
-// 400 — переданы некорректные данные в методы создания карточки,
-// пользователя, обновления аватара пользователя или профиля;
-// 404 — карточка или пользователь не найден.
-// 500 — ошибка по-умолчанию.
 const { ValidationError, DocumentNotFoundError, CastError } = require('mongoose').Error;
+const { JsonWebTokenError } = require('jsonwebtoken');
 
+const CREATED_CODE = 201;
 const BAD_REQUEST_ERROR = 400;
+const UNAUTHORIZED_ERROR = 401;
 const NOT_FOUND_ERROR = 404;
 const DEFAULT_ERROR = 500;
-const CREATED_CODE = 201;
 
 const handleErrors = (err, res) => {
   if (err instanceof ValidationError) {
@@ -17,6 +15,9 @@ const handleErrors = (err, res) => {
     return res.status(BAD_REQUEST_ERROR).send({
       message: `Переданы некорректные данные. ${errorMessage}`,
     });
+  }
+  if (err instanceof JsonWebTokenError) {
+    return res.status(UNAUTHORIZED_ERROR).send({ message: 'Передан невалидный токен' });
   }
   if (err instanceof DocumentNotFoundError) {
     return res.status(NOT_FOUND_ERROR).send({
