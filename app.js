@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { NOT_FOUND_ERROR } = require('./errors/errors');
 
+const { login, createUser } = require('./controllers/users');
+
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -25,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('*', (req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
