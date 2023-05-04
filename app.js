@@ -7,6 +7,7 @@ const centralErrorHandler = require('./middlewares/errors');
 const NotFoundError = require('./utils/errors/NotFoundError');
 
 const { login, createUser } = require('./controllers/users');
+const { userSignUpValidate } = require('./middlewares/validators/userValidators');
 const auth = require('./middlewares/auth');
 
 // Слушаем 3000 порт
@@ -23,8 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', userSignUpValidate, login);
+app.post('/signup', userSignUpValidate, createUser);
 
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
