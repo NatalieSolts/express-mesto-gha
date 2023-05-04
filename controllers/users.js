@@ -1,78 +1,81 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, SECRET_KEY } = process.env;
+
+const { CREATED_CODE } = require('../middlewares/errors');
 
 const User = require('../models/user');
-const { handleErrors } = require('../errors/errors');
 
 // GET /users — возвращает всех пользователей
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => handleErrors(err, res));
+    .catch(next);
 };
 
 // GET /users/:userId - возвращает пользователя по _id
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => handleErrors(err, res));
+    .catch(next);
 };
 
 // POST /users — создаёт пользователя
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
-    email, password, name, about, avatar,
+    name, about, avatar, email, password,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      email, password: hash, name, about, avatar,
+      name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({ data: user }))
-    .catch((err) => handleErrors(err, res));
+    .then((user) => {
+      const data = user.toObject();
+      delete data.password;
+      res.status(CREATED_CODE).send(data);
+    })
+    .catch(next);
 };
 
-// PATCH /users/me — обновляет профиль
-module.exports.updateUserInfo = (req, res) => {
-  const { name, about } = req.body;
+function updateInfo(req, res, dataToUpdate, next) {
+  const id = req.user._id;
   User.findByIdAndUpdate(
-    req.user._id,
-    { name, about },
+    id,
+    dataToUpdate,
     { new: true, runValidators: true },
   )
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => handleErrors(err, res));
+    .catch(next);
+}
+// PATCH /users/me — обновляет профиль
+module.exports.updateUserInfo = (req, res, next) => {
+  const userData = req.body;
+  updateInfo(req, res, userData, next);
 };
 
 // PATCH /users/me/avatar — обновляет аватар
-module.exports.updateUserAvatar = (req, res) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    { new: true, runValidators: true },
-  )
-    .orFail()
-    .then((user) => res.send({ data: user }))
-    .catch((err) => handleErrors(err, res));
+module.exports.updateUserAvatar = (req, res, next) => {
+  const newAvatarLink = req.body;
+  updateInfo(req, res, newAvatarLink, next);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        NODE_ENV === 'production' ? SECRET_KEY : 'secret-key',
         { expiresIn: '7d' },
       );
       res.cookie('jwt', token, {
         httpOnly: true,
+        maxAge: 3600000 * 24 * 7,
       });
-      res.send({ token });
+      res.send({ message: 'Вы успешно вошли!' });
     })
-    .catch((err) => handleErrors(err, res));
+    .catch(next);
 };
