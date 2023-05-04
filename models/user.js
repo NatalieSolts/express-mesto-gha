@@ -18,25 +18,27 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator(value) {
+        return /http(s)?:\/\/(w{3}.)?[a-z0-9.-]+\/[a-z0-9.\-_~:/?#\[\]@!$&'()*+,;=]?#?/i.test(value);
+      },
+    },
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: {
-      validator: (email) => validator.isEmail(email),
-      message: 'Некорректный формат электронной почты',
-    },
   },
   password: {
     type: String,
     required: true,
     minlength: 8,
+    select: false,
   },
 });
 
 userSchema.statics.findUserByCredentials = function findUser(email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
