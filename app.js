@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { NOT_FOUND_ERROR } = require('./errors/errors');
 
 const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -14,22 +15,15 @@ mongoose
     useNewUrlParser: true,
   });
 
-// Реализация временного решения авторизации
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6443ce1121f1464b0ce5e2a6',
-  };
-  next();
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
-
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
