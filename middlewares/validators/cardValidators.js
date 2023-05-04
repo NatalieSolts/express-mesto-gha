@@ -4,7 +4,7 @@ const LINK_PATTERN = require('../../utils/constants');
 module.exports.cardDataValidate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().regex(LINK_PATTERN.URL).required(),
+    link: Joi.string().pattern(LINK_PATTERN).required(),
   }),
 });
 module.exports.cardIdValidate = celebrate({

@@ -11,7 +11,7 @@ module.exports.userSignUpValidate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(LINK_PATTERN),
+    avatar: Joi.string().pattern(LINK_PATTERN),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
