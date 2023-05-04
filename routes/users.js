@@ -12,6 +12,9 @@ router.get('/', getAllUsers);
 // GET /users/:userId - возвращает пользователя по _id
 router.get('/:userId', getUser);
 
+// возвращает информацию о текущем пользователе
+router.get('/me', getUser);
+
 // PATCH /users/me — обновляет профиль
 router.patch('/me', updateUserInfo);
 
