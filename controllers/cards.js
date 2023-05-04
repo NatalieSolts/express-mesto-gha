@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 const { CREATED_CODE } = require('../utils/constants');
 
-const ForbiddenError = require('../utils/errors/ForbiddenError');
+// const ForbiddenError = require('../utils/errors/ForbiddenError');
 
 // GET /cards — возвращает все карточки
 module.exports.getCards = (req, res, next) => {
@@ -31,9 +31,10 @@ module.exports.deleteCard = (req, res, next) => {
         card.deleteOne()
           .then(() => res.send({ message: 'Карточка успешно удалена.' }))
           .catch(next);
-      } else {
-        next(new ForbiddenError('Нельзя удалять чужие карточки.'));
       }
+      /* else {
+        next(new ForbiddenError('Нельзя удалять чужие карточки.'));
+      } */
     })
     .catch(next);
 };
