@@ -6,6 +6,8 @@ const {
   updateUserAvatar,
 } = require('../controllers/users');
 
+const { userIdValidate, userInfoValidate, userAvatarValidate } = require('../middlewares/validators/userValidators');
+
 // GET /users — возвращает всех пользователей
 router.get('/', getAllUsers);
 
@@ -13,12 +15,12 @@ router.get('/', getAllUsers);
 router.get('/:userId', getUser);
 
 // возвращает информацию о текущем пользователе
-router.get('/me', getUser);
+router.get('/me', userIdValidate, getUser);
 
 // PATCH /users/me — обновляет профиль
-router.patch('/me', updateUserInfo);
+router.patch('/me', userInfoValidate, updateUserInfo);
 
 // PATCH /users/me/avatar — обновляет аватар
-router.patch('/me/avatar', updateUserAvatar);
+router.patch('/me/avatar', userAvatarValidate, updateUserAvatar);
 
 module.exports = router;
