@@ -3,12 +3,13 @@ const {
   DocumentNotFoundError,
   CastError,
 } = require('mongoose').Error;
+
 const {
-  BAD_REQUEST_ERROR, // 400
-  NOT_FOUND_ERROR, // 404
-  DEFAULT_ERROR, // 500
+  BAD_REQUEST_ERROR,
+  NOT_FOUND_ERROR,
+  DEFAULT_ERROR,
   CONFLICT_ERROR,
-} = require('../errors/errors');
+} = require('../utils/constants');
 
 module.exports = ((err, req, res, next) => {
   if (err instanceof ValidationError) {
@@ -23,10 +24,10 @@ module.exports = ((err, req, res, next) => {
     });
   }
   if (err instanceof CastError) {
-    return res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректный формат ID пользователя.' });
+    return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные.' });
   }
   if (err.code === 11000) {
-    return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с таким email уже зарегистрирован. Пожалуйста, используйте другой email' });
+    return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с таким email уже зарегистрирован. Пожалуйста, введите другой email' });
   }
   res.status(DEFAULT_ERROR).send({
     message: `Произошла неизвестная ошибка ${err.name}: ${err.message}`,
