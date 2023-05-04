@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 const { CREATED_CODE } = require('../utils/constants');
 
-const ForbiddenError = require('../utils/errors/Forbiddenerror');
+const ForbiddenError = require('../utils/errors/ForbiddenError');
 
 // GET /cards — возвращает все карточки
 module.exports.getCards = (req, res, next) => {

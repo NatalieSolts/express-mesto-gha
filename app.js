@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { NOT_FOUND_ERROR } = require('./errors/errors');
+const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
+
+const centralErrorHandler = require('./middlewares/errors');
+const NotFoundError = require('./utils/errors/NotFoundError');
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -17,16 +21,20 @@ mongoose
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use(auth);
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
-});
+app.use('*', (req, res, next) => next(new NotFoundError()));
+
+// валидация ошибок Joi-library
+app.use(errors());
+
+// централизованная обработка ошибок
+app.use(centralErrorHandler);
 
 app.listen(PORT);
