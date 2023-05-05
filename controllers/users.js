@@ -14,12 +14,23 @@ module.exports.getAllUsers = (req, res, next) => {
     .catch(next);
 };
 
-// GET /users/:userId - возвращает пользователя по _id
-module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+const getUserById = (req, res, id, next) => {
+  User.findById(id)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch(next);
+};
+
+// возвращает информацию о текущем пользователе
+module.exports.getMe = (req, res, next) => {
+  const id = req.user._id;
+  getUserById(req, res, id, next);
+};
+
+// GET /users/:userId - возвращает пользователя по _id
+module.exports.getUser = (req, res, next) => {
+  const id = req.params.userId;
+  getUserById(req, res, id, next);
 };
 
 // POST /users — создаёт пользователя
@@ -39,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-function updateInfo(req, res, dataToUpdate, next) {
+const updateInfo = (req, res, dataToUpdate, next) => {
   const id = req.user._id;
   User.findByIdAndUpdate(
     id,
@@ -49,7 +60,8 @@ function updateInfo(req, res, dataToUpdate, next) {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch(next);
-}
+};
+
 // PATCH /users/me — обновляет профиль
 module.exports.updateUserInfo = (req, res, next) => {
   const userData = req.body;

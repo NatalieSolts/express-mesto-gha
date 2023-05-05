@@ -2,6 +2,7 @@ const router = require('express').Router();
 const {
   getAllUsers,
   getUser,
+  getMe,
   updateUserInfo,
   updateUserAvatar,
 } = require('../controllers/users');
@@ -15,7 +16,7 @@ router.get('/', getAllUsers);
 router.get('/:userId', getUser);
 
 // возвращает информацию о текущем пользователе
-router.get('/me', userIdValidate, getUser);
+router.get('/me', userIdValidate, getMe);
 
 // PATCH /users/me — обновляет профиль
 router.patch('/me', userInfoValidate, updateUserInfo);
