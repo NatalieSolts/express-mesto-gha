@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const UnauthorizedError = require('../utils/errors/UnauthorizedError');
 
 const { LINK_PATTERN } = require('../utils/constants');
 
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(value) {
-        return LINK_PATTERN.URL.test(value);
+        return LINK_PATTERN.test(value);
       },
     },
   },
@@ -47,12 +48,12 @@ userSchema.statics.findUserByCredentials = function findUser(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new UnauthorizedError();
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject()(new Error('Неправильные почта или пароль'));
+            throw new UnauthorizedError();
           }
           return user;
         });
