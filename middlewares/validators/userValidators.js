@@ -1,5 +1,5 @@
 const { Joi, celebrate } = require('celebrate');
-const LINK_PATTERN = require('../../utils/constants');
+const { LINK_PATTERN } = require('../../utils/constants');
 
 module.exports.userIdValidate = celebrate({
   params: Joi.object().keys({
