@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const validationErrors = require('celebrate').errors;
 
-const routes = require('./routes/index');
+const router = require('./routes/index');
 const errors = require('./middlewares/errors');
 
 // Слушаем 3000 порт
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(routes);
+app.use(router);
 
 app.use(validationErrors());
 app.use(errors);
