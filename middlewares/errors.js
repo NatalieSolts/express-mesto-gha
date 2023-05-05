@@ -9,9 +9,11 @@ const {
   NOT_FOUND_ERROR,
   DEFAULT_ERROR,
   CONFLICT_ERROR,
-  UNAUTHORIZED_ERROR,
-  FORBIDDEN_ERROR,
 } = require('../utils/constants');
+
+const UnuthorizedError = require('../utils/errors/UnauthorizedError');
+const ForbiddenError = require('../utils/errors/ForbiddenError');
+const NotFoundError = require('../utils/errors/UnauthorizedError');
 
 module.exports = ((err, req, res, next) => {
   if (err instanceof ValidationError) {
@@ -26,19 +28,29 @@ module.exports = ((err, req, res, next) => {
     });
   }
   if (err instanceof CastError) {
-    return res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные.' });
+    return res.status(BAD_REQUEST_ERROR).send({
+      message: 'Переданы некорректные данные.',
+    });
   }
-  if (err instanceof UNAUTHORIZED_ERROR) {
-    return res.status(err.code).send({ message: err.message || 'Неправильный email или пароль.' });
+  if (err instanceof UnuthorizedError) {
+    return res.status(err.statusCode).send({
+      message: err.message,
+    });
   }
-  if (err instanceof NOT_FOUND_ERROR) {
-    return res.status(err.code).send({ message: err.message || 'Страница не найдена.' });
+  if (err instanceof ForbiddenError) {
+    return res.status(err.statusCode).send({
+      message: err.message,
+    });
   }
-  if (err instanceof FORBIDDEN_ERROR) {
-    return res.status(err.code).send({ message: err.message || 'Действие запрещено.' });
+  if (err instanceof NotFoundError) {
+    return res.status(err.statusCode).send({
+      message: err.message,
+    });
   }
   if (err.code === 11000) {
-    return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с таким email уже зарегистрирован. Пожалуйста, введите другой email' });
+    return res.status(CONFLICT_ERROR).send({
+      message: 'Пользователь с таким email уже зарегистрирован. Пожалуйста, введите другой email',
+    });
   }
   res.status(DEFAULT_ERROR).send({
     message: `Произошла неизвестная ошибка ${err.name}: ${err.message}`,
