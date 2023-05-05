@@ -53,7 +53,7 @@ module.exports = ((err, req, res, next) => {
     });
   }
   res.status(DEFAULT_ERROR).send({
-    message: `Произошла неизвестная ошибка ${err.name}: ${err.message}`,
+    message: 'На сервере произошла ошибка.',
   });
   return next();
 });
