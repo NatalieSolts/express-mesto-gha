@@ -24,7 +24,7 @@ module.exports = ((err, req, res, next) => {
   }
   if (err instanceof DocumentNotFoundError) {
     return res.status(NOT_FOUND_ERROR).send({
-      message: 'В базе данных не найден документ с таким ID',
+      message: `Пользователь с указанным id не найден: ${err.value}`,
     });
   }
   if (err instanceof CastError) {
@@ -49,7 +49,7 @@ module.exports = ((err, req, res, next) => {
   }
   if (err.code === 11000) {
     return res.status(CONFLICT_ERROR).send({
-      message: 'Пользователь с таким email уже зарегистрирован. Пожалуйста, введите другой email',
+      message: 'Пользователь с таким email уже зарегистрирован.',
     });
   }
   res.status(DEFAULT_ERROR).send({
