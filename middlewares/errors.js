@@ -13,7 +13,7 @@ const {
 
 const UnuthorizedError = require('../utils/errors/UnauthorizedError');
 const ForbiddenError = require('../utils/errors/ForbiddenError');
-const NotFoundError = require('../utils/errors/UnauthorizedError');
+const NotFoundError = require('../utils/errors/NotFoundError');
 
 module.exports = ((err, req, res, next) => {
   if (err instanceof ValidationError) {
