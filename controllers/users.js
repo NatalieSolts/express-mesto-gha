@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, SECRET_KEY } = process.env;
 
-const { CREATED_CODE } = require('../middlewares/errors');
+const { CREATED_CODE } = require('../utils/constants');
 
 const User = require('../models/user');
 
