@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {
-  getCards,
+  getAllCards,
   createCard,
   deleteCard,
   likeCard,
@@ -10,7 +10,7 @@ const {
 const { cardDataValidate, cardIdValidate } = require('../middlewares/validators/cardValidators');
 
 // GET /cards — возвращает все карточки
-router.get('/', getCards);
+router.get('/', getAllCards);
 
 // POST /cards — создаёт карточку
 router.post('/', cardDataValidate, createCard);

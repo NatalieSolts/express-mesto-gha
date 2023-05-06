@@ -33,6 +33,6 @@ module.exports.userInfoValidate = celebrate({
 
 module.exports.userAvatarValidate = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(LINK_PATTERN).required(),
+    avatar: Joi.string().regex(LINK_PATTERN).required(),
   }),
 });

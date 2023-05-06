@@ -3,7 +3,7 @@ const { CREATED_CODE } = require('../utils/constants');
 const ForbiddenError = require('../utils/errors/ForbiddenError');
 
 // GET /cards — возвращает все карточки
-module.exports.getCards = (req, res, next) => {
+module.exports.getAllCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
