@@ -11,7 +11,7 @@ const {
   CONFLICT_ERROR,
 } = require('../utils/constants');
 
-const UnuthorizedError = require('../utils/errors/UnauthorizedError');
+const UnauthorizedError = require('../utils/errors/UnauthorizedError');
 const ForbiddenError = require('../utils/errors/ForbiddenError');
 const NotFoundError = require('../utils/errors/NotFoundError');
 
@@ -32,7 +32,7 @@ module.exports = ((err, req, res, next) => {
       message: 'Переданы некорректные данные.',
     });
   }
-  if (err instanceof UnuthorizedError) {
+  if (err instanceof UnauthorizedError) {
     return res.status(err.statusCode).send({
       message: err.message,
     });
