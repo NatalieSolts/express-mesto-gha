@@ -26,6 +26,4 @@ app.use(router);
 app.use(validationErrors());
 app.use(errors);
 
-app.listen(PORT, () => {
-  console.log(`слушаем порт ${PORT}`);
-});
+app.listen(PORT);
