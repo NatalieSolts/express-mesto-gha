@@ -12,11 +12,11 @@ const { userIdValidate, userInfoValidate, userAvatarValidate } = require('../mid
 // GET /users — возвращает всех пользователей
 router.get('/', getAllUsers);
 
-// GET /users/:userId - возвращает пользователя по _id
-router.get('/:userId', userIdValidate, getUser);
-
 // возвращает информацию о текущем пользователе
 router.get('/me', getMe);
+
+// GET /users/:userId - возвращает пользователя по _id
+router.get('/:userId', userIdValidate, getUser);
 
 // PATCH /users/me — обновляет профиль
 router.patch('/me', userInfoValidate, updateUserInfo);
